@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="application-details">
+        <div class="row">
+            <div class="col-md-6">
+                <h6><i class="fas fa-user me-2"></i>Applicant Information</h6>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p><strong>Name:</strong> <span th:text="${application.applicant.fullName}">John Doe</span></p>
+                        <p><strong>Email:</strong> <span th:text="${application.applicant.email}">john@example.com</span></p>
+                        <p><strong>Phone:</strong> <span th:text="${application.applicant.phone ?: 'Not provided'}">555-123-4567</span></p>
+                        <p><strong>Address:</strong> 
+                            <span th:if="${application.applicant.address}" 
+                                  th:text="${application.applicant.address + ', ' + application.applicant.city + ', ' + application.applicant.state + ' ' + application.applicant.zipCode}">
+                                123 Main St, City, State 12345
+                            </span>
+                            <span th:unless="${application.applicant.address}" class="text-muted">Not provided</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6><i class="fas fa-paw me-2"></i>Pet Information</h6>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img th:src="${application.pet.imageUrl != null ? application.pet.imageUrl : '/images/default-pet.jpg'}" 
+                                 th:alt="${application.pet.name}" 
+                                 class="rounded me-3" 
+                                 style="width: 80px; height: 80px; object-fit: cover;">
+                            <div>
+                                <h5 class="mb-1" th:text="${application.pet.name}">Buddy</h5>
+                                <p class="mb-1 text-muted" th:text="${application.pet.species + ' • ' + (application.pet.breed ?: 'Mixed Breed')}">Dog • Golden Retriever</p>
+                                <p class="mb-0 text-muted" th:text="${application.pet.ageDisplay + ' • ' + application.pet.sizeDisplay}">3 years old • Large</p>
+                            </div>
+                        </div>
+                        <p th:if="${application.pet.adoptionFee != null and application.pet.adoptionFee > 0}">
+                            <strong>Adoption Fee:</strong> $<span th:text="${application.pet.adoptionFee}">250</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h6><i class="fas fa-file-text me-2"></i>Application Details</h6>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Application Date:</strong> 
+                                    <span th:text="${#temporals.format(application.applicationDate, 'MMMM dd, yyyy HH:mm')}">March 15, 2024 10:30 AM</span>
+                                </p>
+                                <p><strong>Status:</strong> 
+                                    <span class="badge" 
+                                          th:classappend="${application.statusBadgeClass}"
+                                          th:text="${application.statusDisplay}">
+                                        Pending Review
+                                    </span>
+                                </p>
+                                <p th:if="${application.reviewDate}">
+                                    <strong>Review Date:</strong> 
+                                    <span th:text="${#temporals.format(application.reviewDate, 'MMMM dd, yyyy HH:mm')}">March 16, 2024 14:20 PM</span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Home Visit Required:</strong> 
+                                    <span th:text="${application.homeVisitRequired ? 'Yes' : 'No'}">No</span>
+                                </p>
+                                <p th:if="${application.homeVisitRequired}">
+                                    <strong>Home Visit Completed:</strong> 
+                                    <span th:text="${application.homeVisitCompleted ? 'Yes' : 'No'}">No</span>
+                                </p>
+                                <p><strong>References Checked:</strong> 
+                                    <span th:text="${application.referencesChecked ? 'Yes' : 'No'}">No</span>
+                                </p>
+                                <p><strong>Background Check:</strong> 
+                                    <span th:text="${application.backgroundCheckCompleted ? 'Yes' : 'No'}">No</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" th:if="${application.applicantMessage}">
+            <div class="col-12">
+                <h6><i class="fas fa-comment me-2"></i>Applicant Message</h6>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p th:text="${application.applicantMessage}" class="mb-0">
+                            I would love to adopt this pet. I have experience with dogs and a large yard.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" th:if="${application.reviewerNotes}">
+            <div class="col-12">
+                <h6><i class="fas fa-sticky-note me-2"></i>Reviewer Notes</h6>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p th:text="${application.reviewerNotes}" class="mb-0">
+                            Applicant seems very qualified. Need to schedule home visit.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lifestyle Profile if available -->
+        <div class="row" th:if="${application.applicant.lifestyleProfile}">
+            <div class="col-12">
+                <h6><i class="fas fa-home me-2"></i>Applicant's Lifestyle Profile</h6>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Living Situation:</strong> 
+                                    <span th:text="${#strings.capitalize(application.applicant.lifestyleProfile.livingSituation)}">House</span>
+                                </p>
+                                <p><strong>Yard Size:</strong> 
+                                    <span th:text="${application.applicant.lifestyleProfile.yardSize != null ? #strings.capitalize(application.applicant.lifestyleProfile.yardSize) : 'Not specified'}">Large</span>
+                                </p>
+                                <p><strong>Activity Level:</strong> 
+                                    <span th:text="${application.applicant.lifestyleProfile.activityLevel.name()}">HIGH</span>
+                                </p>
+                                <p><strong>Experience Level:</strong> 
+                                    <span th:text="${application.applicant.lifestyleProfile.experienceLevelDisplay}">Very experienced with pets</span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Time Availability:</strong> 
+                                    <span th:text="${application.applicant.lifestyleProfile.timeAvailability + ' hours/day'}">6 hours/day</span>
+                                </p>
+                                <p><strong>Has Children:</strong> 
+                                    <span th:text="${application.applicant.lifestyleProfile.hasChildren ? 'Yes' : 'No'}">No</span>
+                                </p>
+                                <p><strong>Has Other Pets:</strong> 
+                                    <span th:text="${application.applicant.lifestyleProfile.hasOtherPets ? 'Yes' : 'No'}">Yes</span>
+                                </p>
+                                <p th:if="${application.applicant.lifestyleProfile.maxAdoptionFee}">
+                                    <strong>Budget:</strong> 
+                                    $<span th:text="${application.applicant.lifestyleProfile.maxAdoptionFee}">500</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div th:if="${application.applicant.lifestyleProfile.specialRequirements}">
+                            <p><strong>Special Requirements:</strong></p>
+                            <p class="text-muted" th:text="${application.applicant.lifestyleProfile.specialRequirements}">
+                                Looking for a calm, house-trained dog that gets along with cats.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h6><i class="fas fa-tasks me-2"></i>Application Progress</h6>
+                <div class="card">
+                    <div class="card-body">
+                        <p th:text="${application.applicationProgress}" class="mb-0">
+                            ⏳ Home visit pending ✓ References checked ✓ Background check completed (2/3)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

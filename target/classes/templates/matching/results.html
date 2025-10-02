@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Pet Matches - petCONNECT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .results-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+        }
+        .match-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .pet-image {
+            height: 250px;
+            object-fit: cover;
+            width: 100%;
+        }
+        .compatibility-score {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .score-excellent { color: #28a745; }
+        .score-great { color: #17a2b8; }
+        .score-good { color: #007bff; }
+        .score-fair { color: #ffc107; }
+        .score-poor { color: #dc3545; }
+        
+        .match-quality-badge {
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        .pet-details {
+            padding: 1.5rem;
+        }
+        .pet-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .pet-info {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        .match-explanation {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #667eea;
+        }
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .no-matches {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn-apply {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+            color: white;
+        }
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="results-header text-center">
+        <div class="container">
+            <h1><i class="fas fa-heart"></i> Your Perfect Pet Matches</h1>
+            <p class="lead" th:text="'Hello ' + ${user.firstName} + '! Based on your lifestyle profile, here are your personalized pet matches.'"></p>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <!-- Match Statistics -->
+        <div class="row mb-4" th:if="${hasMatches}">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number" th:text="${excellentMatches}">0</div>
+                    <div class="text-muted">Excellent Matches</div>
+                    <small class="text-success">85%+ compatibility</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number" th:text="${greatMatches}">0</div>
+                    <div class="text-muted">Great Matches</div>
+                    <small class="text-info">70-84% compatibility</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number" th:text="${goodMatches}">0</div>
+                    <div class="text-muted">Good Matches</div>
+                    <small class="text-primary">55-69% compatibility</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mb-4">
+            <a href="/matching/profile" class="btn btn-outline-primary me-2">
+                <i class="fas fa-user"></i> View My Profile
+            </a>
+            <form th:action="@{/matching/retake}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="fas fa-redo"></i> Retake Questionnaire
+                </button>
+            </form>
+        </div>
+
+        <!-- Pet Matches -->
+        <div th:if="${hasMatches}">
+            <div class="row">
+                <div class="col-lg-8 mx-auto" th:each="match : ${matches}">
+                    <div class="card match-card">
+                        <div class="position-relative">
+                            <img th:src="${match.pet.imageUrl != null ? match.pet.imageUrl : '/images/default-pet.jpg'}" 
+                                 th:alt="${match.pet.name}" class="pet-image">
+                            <div class="compatibility-score" 
+                                 th:classappend="${match.compatibilityScore >= 85 ? 'score-excellent' : 
+                                                 match.compatibilityScore >= 70 ? 'score-great' : 
+                                                 match.compatibilityScore >= 55 ? 'score-good' : 
+                                                 match.compatibilityScore >= 40 ? 'score-fair' : 'score-poor'}"
+                                 th:text="${match.compatibilityPercentage}">
+                                95%
+                            </div>
+                        </div>
+                        <div class="pet-details">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="pet-name" th:text="${match.pet.name}">Buddy</div>
+                                <span class="badge match-quality-badge" 
+                                      th:classappend="${match.matchQualityBadgeClass}"
+                                      th:text="${match.matchQuality}">
+                                    Excellent Match
+                                </span>
+                            </div>
+                            
+                            <div class="pet-info">
+                                <i class="fas fa-paw me-2"></i>
+                                <span th:text="${match.pet.species + ' • ' + (match.pet.breed ?: 'Mixed Breed') + ' • ' + match.pet.ageDisplay}">
+                                    Dog • Golden Retriever • 3 years old
+                                </span>
+                            </div>
+                            
+                            <div class="pet-info">
+                                <i class="fas fa-ruler-combined me-2"></i>
+                                <span th:text="${match.pet.sizeDisplay + ' • ' + match.pet.gender}">Large • Male</span>
+                                <span th:if="${match.pet.adoptionFee != null and match.pet.adoptionFee > 0}" 
+                                      th:text="' • $' + ${match.pet.adoptionFee}"> • $250</span>
+                            </div>
+
+                            <div class="match-explanation">
+                                <h6><i class="fas fa-lightbulb me-2"></i>Why this is a great match:</h6>
+                                <p class="mb-0" th:text="${match.explanation}">
+                                    Perfect energy match! Matches your size preference. Great for experienced owners!
+                                </p>
+                            </div>
+
+                            <!-- Pet Traits -->
+                            <div class="row mt-3" th:if="${match.pet.personalityProfile != null}">
+                                <div class="col-6">
+                                    <small class="text-muted">Energy Level:</small><br>
+                                    <span th:text="${match.pet.personalityProfile.energyLevel.name()}">HIGH</span>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Sociability:</small><br>
+                                    <span th:text="${match.pet.personalityProfile.sociability.name()}">SOCIAL</span>
+                                </div>
+                            </div>
+
+                            <!-- Good With -->
+                            <div class="mt-3">
+                                <small class="text-muted">Good with:</small><br>
+                                <span th:if="${match.pet.goodWithKids}" class="badge bg-success me-1">Kids</span>
+                                <span th:if="${match.pet.goodWithDogs}" class="badge bg-success me-1">Dogs</span>
+                                <span th:if="${match.pet.goodWithCats}" class="badge bg-success me-1">Cats</span>
+                                <span th:if="${match.pet.houseTrained}" class="badge bg-info me-1">House Trained</span>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        <span th:text="${match.pet.shelter.name}">Happy Paws Shelter</span>
+                                    </small>
+                                </div>
+                                <div>
+                                    <a th:href="@{'/pets/' + ${match.pet.id}}" class="btn btn-outline-primary me-2">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                    <a th:href="@{'/apply/' + ${match.pet.id}}" class="btn-apply">
+                                        <i class="fas fa-heart"></i> Apply to Adopt
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Matches Found -->
+        <div th:unless="${hasMatches}" class="no-matches">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h3>No Matches Found</h3>
+            <p class="text-muted mb-4">
+                We couldn't find any pets that match your current preferences. 
+                This might be because there are no available pets with personality profiles, 
+                or your criteria might be very specific.
+            </p>
+            <div>
+                <a href="/pets" class="btn btn-primary me-2">
+                    <i class="fas fa-paw"></i> Browse All Available Pets
+                </a>
+                <form th:action="@{/matching/retake}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-secondary">
+                        <i class="fas fa-redo"></i> Adjust My Preferences
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="row mt-5" th:if="${hasMatches}">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-lightbulb me-2"></i>Tips for Your Pet Adoption Journey</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Visit the shelter to meet your potential pet in person</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Ask about the pet's history, health, and behavior</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Consider a trial period or foster-to-adopt program</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Prepare your home with necessary supplies before adoption</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Be patient - the right match is worth waiting for!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

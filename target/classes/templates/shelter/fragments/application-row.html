@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <tr th:fragment="application-row" th:id="'application-' + ${application.id}" class="application-row">
+        <td>
+            <small class="text-muted">#<span th:text="${#strings.substring(application.id.toString(), 0, 8)}">12345678</span></small>
+        </td>
+        <td>
+            <div>
+                <strong th:text="${application.applicant.fullName}">John Doe</strong><br>
+                <small class="text-muted" th:text="${application.applicant.email}">john@example.com</small>
+            </div>
+        </td>
+        <td>
+            <div class="d-flex align-items-center">
+                <img th:src="${application.pet.imageUrl != null ? application.pet.imageUrl : '/images/default-pet.jpg'}" 
+                     th:alt="${application.pet.name}" 
+                     class="rounded-circle me-2" 
+                     style="width: 40px; height: 40px; object-fit: cover;">
+                <div>
+                    <strong th:text="${application.pet.name}">Buddy</strong><br>
+                    <small class="text-muted" th:text="${application.pet.species + ' • ' + application.pet.breed}">Dog • Golden Retriever</small>
+                </div>
+            </div>
+        </td>
+        <td>
+            <span th:text="${#temporals.format(application.applicationDate, 'MMM dd, yyyy')}">Mar 15, 2024</span><br>
+            <small class="text-muted" th:text="${#temporals.format(application.applicationDate, 'HH:mm')}">10:30 AM</small>
+        </td>
+        <td>
+            <select class="form-select status-dropdown" 
+                    th:classappend="'status-' + ${#strings.toLowerCase(application.status.name())}"
+                    hx-post="/shelter/applications/update/{applicationId}(applicationId=${application.id})"
+                    hx-target="closest tr"
+                    hx-swap="outerHTML"
+                    hx-include="[name='reviewerNotes']"
+                    name="status">
+                <option th:each="status : ${T(com.petconnect.project.entity.ApplicationStatus).values()}"
+                        th:value="${status}"
+                        th:text="${status.name()}"
+                        th:selected="${status == application.status}">
+                    PENDING
+                </option>
+            </select>
+            <div class="htmx-indicator mt-1">
+                <div class="loading-spinner"></div>
+            </div>
+        </td>
+        <td>
+            <div class="btn-group" role="group">
+                <button type="button" 
+                        class="btn btn-sm btn-outline-primary"
+                        onclick="loadApplicationDetails('{applicationId}')"
+                        th:onclick="'loadApplicationDetails(\'' + ${application.id} + '\')'">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" 
+                        class="btn btn-sm btn-outline-secondary"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#notesModal"
+                        th:onclick="'setApplicationId(\'' + ${application.id} + '\')'">
+                    <i class="fas fa-sticky-note"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+
+    <!-- Notes Modal -->
+    <div class="modal fade" id="notesModal" tabindex="-1" aria-labelledby="notesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notesModalLabel">Add Reviewer Notes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="notesForm">
+                        <div class="mb-3">
+                            <label for="reviewerNotes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="reviewerNotes" name="reviewerNotes" rows="4" 
+                                      placeholder="Add any notes about this application..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveNotes()">Save Notes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentApplicationId = null;
+        
+        function setApplicationId(applicationId) {
+            currentApplicationId = applicationId;
+            // Clear previous notes
+            document.getElementById('reviewerNotes').value = '';
+        }
+        
+        function saveNotes() {
+            const notes = document.getElementById('reviewerNotes').value;
+            if (currentApplicationId && notes.trim()) {
+                // Find the status dropdown for this application
+                const row = document.getElementById('application-' + currentApplicationId);
+                const statusDropdown = row.querySelector('.status-dropdown');
+                
+                // Create a hidden input for notes
+                let notesInput = row.querySelector('input[name="reviewerNotes"]');
+                if (!notesInput) {
+                    notesInput = document.createElement('input');
+                    notesInput.type = 'hidden';
+                    notesInput.name = 'reviewerNotes';
+                    row.appendChild(notesInput);
+                }
+                notesInput.value = notes;
+                
+                // Trigger the HTMX request
+                htmx.trigger(statusDropdown, 'change');
+                
+                // Close modal
+                bootstrap.Modal.getInstance(document.getElementById('notesModal')).hide();
+            }
+        }
+    </script>
+</body>
+</html>

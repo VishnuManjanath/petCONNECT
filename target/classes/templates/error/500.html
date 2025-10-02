@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error - petCONNECT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .error-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 3rem;
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+        }
+        .error-icon {
+            font-size: 6rem;
+            color: #dc3545;
+            margin-bottom: 2rem;
+        }
+        .error-code {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+        .btn-home {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        .error-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        .debug-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        .stack-trace {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="error-container">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="error-code">500</div>
+                    <h2 class="mb-3">Internal Server Error</h2>
+                    <p class="text-muted mb-4">
+                        Something went wrong on our end. Our team has been notified and is working to fix the issue. 
+                        Please try again in a few moments.
+                    </p>
+                    
+                    <div class="error-details">
+                        <h6><i class="fas fa-info-circle me-2"></i>Error Details</h6>
+                        <p class="mb-1"><strong>Error:</strong> <span th:text="${error}">Internal Server Error</span></p>
+                        <p class="mb-1"><strong>Message:</strong> <span th:text="${message}">An unexpected error occurred</span></p>
+                        <p class="mb-1"><strong>Path:</strong> <code th:text="${path}">/some-path</code></p>
+                        <p class="mb-0"><strong>Time:</strong> <span th:text="${#temporals.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">2024-03-15 10:30:00</span></p>
+                    </div>
+
+                    <!-- Debug information (only shown in development) -->
+                    <div class="debug-section" th:if="${debugMessage}">
+                        <h6><i class="fas fa-bug me-2"></i>Debug Information</h6>
+                        <p><strong>Exception:</strong> <span th:text="${debugMessage}">Detailed error message</span></p>
+                        <div th:if="${stackTrace}">
+                            <p><strong>Stack Trace:</strong></p>
+                            <div class="stack-trace" th:text="${stackTrace}">Stack trace details...</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="/" class="btn-home">
+                            <i class="fas fa-home me-2"></i>Go Home
+                        </a>
+                        <button onclick="location.reload()" class="btn btn-outline-primary">
+                            <i class="fas fa-redo me-2"></i>Try Again
+                        </button>
+                        <button onclick="history.back()" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Go Back
+                        </button>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6>What you can do:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Wait a few minutes and try again</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Check if the issue persists</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Contact support if the problem continues</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            If this problem persists, please contact our support team with the error details above.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
