@@ -6,3 +6,4 @@ public enum EnergyLevel {
     HIGH,
     VERY_HIGH
 }
+

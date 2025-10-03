@@ -45,3 +45,5 @@ ENTRYPOINT ["java", "-jar", "target/petconnect-0.0.1-SNAPSHOT.jar"]
 # Optional: Add JVM tuning for containerized environments
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport"
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar target/petconnect-0.0.1-SNAPSHOT.jar"]
+
+

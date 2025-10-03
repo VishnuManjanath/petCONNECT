@@ -6,3 +6,4 @@ public enum SociabilityLevel {
     SOCIAL,
     VERY_SOCIAL
 }
+

@@ -43,3 +43,5 @@ public interface AdoptionApplicationRepository extends JpaRepository<AdoptionApp
 
     boolean existsByApplicantIdAndPetId(UUID applicantId, UUID petId);
 }
+
+

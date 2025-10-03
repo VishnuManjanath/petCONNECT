@@ -16,3 +16,5 @@ public interface PersonalityProfileRepository extends JpaRepository<PersonalityP
 
     void deleteByPetId(UUID petId);
 }
+
+

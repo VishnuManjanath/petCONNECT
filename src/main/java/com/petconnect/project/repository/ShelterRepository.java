@@ -33,8 +33,10 @@ public interface ShelterRepository extends JpaRepository<Shelter, UUID> {
     @Query("SELECT s FROM Shelter s LEFT JOIN FETCH s.pets WHERE s.id = :id")
     Optional<Shelter> findByIdWithPets(@Param("id") UUID id);
 
-    @Query("SELECT COUNT(p) FROM Pet p WHERE p.shelter.id = :shelterId AND p.isAvailable = true")
+    @Query("SELECT COUNT(p) FROM Pet p WHERE p.shelter.id = :shelterId AND p.available = true")
     long countAvailablePets(@Param("shelterId") UUID shelterId);
 
     boolean existsByAdminUserId(UUID adminUserId);
 }
+
+

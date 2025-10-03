@@ -163,3 +163,5 @@ public class AdoptionApplication {
         return progress.toString() + " (" + completed + "/" + total + ")";
     }
 }
+
+

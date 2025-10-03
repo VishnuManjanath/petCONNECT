@@ -113,3 +113,4 @@ public class User {
         return role == UserRole.ADOPTER;
     }
 }
+

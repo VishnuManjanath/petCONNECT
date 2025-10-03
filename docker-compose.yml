@@ -1,24 +1,24 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: petconnect-postgres
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: petconnect-mysql
     environment:
-      POSTGRES_DB: petconnect
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      PGDATA: /var/lib/postgresql/data/pgdata
+      MYSQL_DATABASE: petconnect
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: petconnect_user
+      MYSQL_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
       - ./init-scripts:/docker-entrypoint-initdb.d/
     networks:
       - petconnect-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d petconnect"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ppassword"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,8 +32,8 @@ services:
     container_name: petconnect-app
     environment:
       # Database configuration
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/petconnect
-      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/petconnect?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
       
       # JPA configuration
@@ -57,7 +57,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
     networks:
       - petconnect-network
@@ -82,7 +82,7 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - postgres
+      - mysql
     networks:
       - petconnect-network
     volumes:
@@ -112,7 +112,7 @@ services:
       - dev  # Only start with --profile dev
 
 volumes:
-  postgres_data:
+  mysql_data:
     driver: local
   pgadmin_data:
     driver: local
@@ -125,3 +125,4 @@ networks:
   petconnect-network:
     driver: bridge
     name: petconnect-network
+

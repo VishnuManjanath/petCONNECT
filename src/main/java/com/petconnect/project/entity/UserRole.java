@@ -5,3 +5,4 @@ public enum UserRole {
     SHELTER_ADMIN,
     ADMIN
 }
+

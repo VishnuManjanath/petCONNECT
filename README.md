@@ -13,16 +13,17 @@
 - **🔐 Role-Based Security**: Secure authentication with different access levels (Admin, Shelter Admin, Adopter)
 - **📱 Responsive Design**: Beautiful, mobile-first UI built with Bootstrap 5
 - **🐳 Docker Ready**: Fully containerized for easy deployment
-- **🛡️ Robust Architecture**: Built with Spring Boot, Spring Security, and PostgreSQL
+- **🛡️ Robust Architecture**: Built with Spring Boot, Spring Security, and MySQL
 
 ## 🏗️ Technology Stack
 
 ### Backend
-- **Java 17** - Modern Java features and performance
+- **Java 21** - Modern Java LTS features and performance
 - **Spring Boot 3.2** - Application framework
 - **Spring Security** - Authentication and authorization
 - **Spring Data JPA** - Database abstraction
-- **PostgreSQL** - Primary database
+- **Apache Tomcat** - Embedded web server
+- **MySQL 8.0** - Primary database
 - **Maven** - Dependency management
 
 ### Frontend
@@ -293,5 +294,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Made with ❤️ for pets and their future families**
 
 For questions or support, please open an issue or contact the development team.
-#   p e t C O N N E C T  
+#   p e t C O N N E C T 
+ 
  

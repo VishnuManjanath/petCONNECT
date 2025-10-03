@@ -16,20 +16,20 @@ import java.util.UUID;
 @Repository
 public interface PetRepository extends JpaRepository<Pet, UUID> {
 
-    List<Pet> findByIsAvailableTrue();
+    List<Pet> findByAvailableTrue();
 
-    List<Pet> findByShelterIdAndIsAvailableTrue(UUID shelterId);
+    List<Pet> findByShelterIdAndAvailableTrue(UUID shelterId);
 
-    List<Pet> findBySpeciesIgnoreCaseAndIsAvailableTrue(String species);
+    List<Pet> findBySpeciesIgnoreCaseAndAvailableTrue(String species);
 
-    List<Pet> findBySizeAndIsAvailableTrue(PetSize size);
+    List<Pet> findBySizeAndAvailableTrue(PetSize size);
 
-    List<Pet> findByAgeGroupAndIsAvailableTrue(PetAgeGroup ageGroup);
+    List<Pet> findByAgeGroupAndAvailableTrue(PetAgeGroup ageGroup);
 
-    @Query("SELECT p FROM Pet p WHERE p.isAvailable = true AND p.adoptionFee <= :maxFee")
+    @Query("SELECT p FROM Pet p WHERE p.available = true AND p.adoptionFee <= :maxFee")
     List<Pet> findAvailablePetsWithinBudget(@Param("maxFee") BigDecimal maxFee);
 
-    @Query("SELECT p FROM Pet p LEFT JOIN FETCH p.personalityProfile WHERE p.isAvailable = true AND p.personalityProfile IS NOT NULL")
+    @Query("SELECT p FROM Pet p LEFT JOIN FETCH p.personalityProfile WHERE p.available = true AND p.personalityProfile IS NOT NULL")
     List<Pet> findAvailablePetsWithPersonalityProfiles();
 
     @Query("SELECT p FROM Pet p LEFT JOIN FETCH p.shelter LEFT JOIN FETCH p.personalityProfile WHERE p.id = :id")
@@ -38,13 +38,13 @@ public interface PetRepository extends JpaRepository<Pet, UUID> {
     @Query("SELECT p FROM Pet p WHERE p.shelter.id = :shelterId")
     List<Pet> findByShelter(@Param("shelterId") UUID shelterId);
 
-    @Query("SELECT p FROM Pet p WHERE p.isAvailable = true AND " +
+    @Query("SELECT p FROM Pet p WHERE p.available = true AND " +
            "(LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
            "LOWER(p.species) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
            "LOWER(p.breed) LIKE LOWER(CONCAT('%', :search, '%')))")
     List<Pet> searchAvailablePets(@Param("search") String search);
 
-    @Query("SELECT p FROM Pet p WHERE p.isAvailable = true AND " +
+    @Query("SELECT p FROM Pet p WHERE p.available = true AND " +
            "(:species IS NULL OR LOWER(p.species) = LOWER(:species)) AND " +
            "(:size IS NULL OR p.size = :size) AND " +
            "(:ageGroup IS NULL OR p.ageGroup = :ageGroup) AND " +
@@ -56,15 +56,16 @@ public interface PetRepository extends JpaRepository<Pet, UUID> {
             @Param("maxFee") BigDecimal maxFee
     );
 
-    @Query("SELECT COUNT(p) FROM Pet p WHERE p.shelter.id = :shelterId AND p.isAvailable = true")
+    @Query("SELECT COUNT(p) FROM Pet p WHERE p.shelter.id = :shelterId AND p.available = true")
     long countAvailablePetsByShelter(@Param("shelterId") UUID shelterId);
 
-    @Query("SELECT p FROM Pet p WHERE p.goodWithKids = true AND p.isAvailable = true")
+    @Query("SELECT p FROM Pet p WHERE p.goodWithKids = true AND p.available = true")
     List<Pet> findKidFriendlyPets();
 
-    @Query("SELECT p FROM Pet p WHERE p.goodWithDogs = true AND p.isAvailable = true")
+    @Query("SELECT p FROM Pet p WHERE p.goodWithDogs = true AND p.available = true")
     List<Pet> findDogFriendlyPets();
 
-    @Query("SELECT p FROM Pet p WHERE p.goodWithCats = true AND p.isAvailable = true")
+    @Query("SELECT p FROM Pet p WHERE p.goodWithCats = true AND p.available = true")
     List<Pet> findCatFriendlyPets();
 }
+

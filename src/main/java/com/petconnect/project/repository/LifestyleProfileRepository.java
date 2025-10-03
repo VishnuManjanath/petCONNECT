@@ -16,3 +16,5 @@ public interface LifestyleProfileRepository extends JpaRepository<LifestyleProfi
 
     void deleteByUserId(UUID userId);
 }
+
+

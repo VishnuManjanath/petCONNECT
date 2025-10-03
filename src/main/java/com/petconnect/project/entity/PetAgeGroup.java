@@ -6,3 +6,4 @@ public enum PetAgeGroup {
     ADULT,
     SENIOR
 }
+

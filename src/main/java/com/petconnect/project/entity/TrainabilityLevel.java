@@ -6,3 +6,4 @@ public enum TrainabilityLevel {
     CHALLENGING,
     EXPERT_ONLY
 }
+
