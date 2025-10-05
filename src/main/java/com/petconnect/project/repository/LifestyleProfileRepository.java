@@ -19,3 +19,4 @@ public interface LifestyleProfileRepository extends JpaRepository<LifestyleProfi
 
 
 
+

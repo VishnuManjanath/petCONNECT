@@ -14,9 +14,9 @@
     <name>petCONNECT</name>
     <description>Advanced Pet Adoption Platform</description>
     <properties>
-        <java.version>25</java.version>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <java.version>19</java.version>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
     </properties>
     <dependencies>
         <!-- Spring Boot Starters -->
@@ -95,9 +95,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>25</source>
-                    <target>25</target>
-                    <release>25</release>
+                    <source>19</source>
+                    <target>19</target>
+                    <release>19</release>
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
