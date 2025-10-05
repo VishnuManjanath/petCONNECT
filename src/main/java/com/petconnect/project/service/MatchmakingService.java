@@ -151,7 +151,7 @@ public class MatchmakingService {
 
         if (maxBudget.compareTo(adoptionFee) >= 0) {
             // Calculate how much of budget is used (lower usage = better score)
-            double budgetUsage = adoptionFee.divide(maxBudget, 4, BigDecimal.ROUND_HALF_UP).doubleValue();
+            double budgetUsage = adoptionFee.divide(maxBudget, 4, java.math.RoundingMode.HALF_UP).doubleValue();
             return Math.max(0.5, 1.0 - (budgetUsage * 0.3)); // Score between 0.5 and 1.0
         }
         
@@ -341,5 +341,6 @@ public class MatchmakingService {
         }
     }
 }
+
 
 

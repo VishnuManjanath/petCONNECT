@@ -18,3 +18,4 @@ public interface PersonalityProfileRepository extends JpaRepository<PersonalityP
 }
 
 
+

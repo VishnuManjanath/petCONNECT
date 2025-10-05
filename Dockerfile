@@ -1,5 +1,5 @@
-# Use OpenJDK 17 as base image
-FROM openjdk:17-jdk-slim
+# Use OpenJDK 25 as base image to match pom.xml
+FROM openjdk:25-jdk-slim
 
 # Set working directory
 WORKDIR /app
@@ -39,11 +39,11 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8080/actuator/health || exit 1
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "target/petconnect-0.0.1-SNAPSHOT.jar"]
-
 # Optional: Add JVM tuning for containerized environments
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport"
+
+# Run the application
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar target/petconnect-0.0.1-SNAPSHOT.jar"]
+
 
 

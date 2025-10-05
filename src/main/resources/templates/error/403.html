@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied - petCONNECT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .error-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 3rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .error-icon {
+            font-size: 5rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+        .error-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .error-message {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        .btn-home {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-container">
+            <div class="error-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1 class="error-title">403</h1>
+            <h2 th:text="${error}">Access Denied</h2>
+            <p class="error-message" th:text="${message}">
+                You don't have permission to access this resource.
+            </p>
+            <div class="mb-3">
+                <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>
+                    <span th:text="${timestamp}">2024-01-01 12:00:00</span>
+                </small>
+            </div>
+            <div class="mb-4">
+                <small class="text-muted">
+                    <i class="fas fa-link me-1"></i>
+                    <span th:text="${path}">/admin/dashboard</span>
+                </small>
+            </div>
+            <a href="/home" class="btn-home">
+                <i class="fas fa-home me-2"></i>Go Home
+            </a>
+        </div>
+    </div>
+</body>
+</html>
