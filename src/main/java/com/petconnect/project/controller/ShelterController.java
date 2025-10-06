@@ -148,8 +148,38 @@ public class ShelterController {
         model.addAttribute("shelter", shelter);
         model.addAttribute("pets", pets);
         model.addAttribute("newPet", new Pet());
+        model.addAttribute("petSizes", PetSize.values());
+        model.addAttribute("petAgeGroups", PetAgeGroup.values());
 
         return "shelter/pets";
+    }
+
+    @GetMapping("/reports")
+    public String reports(Model model, Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Shelter shelter = shelterRepository.findByAdminUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("No shelter found for this user"));
+
+        model.addAttribute("shelter", shelter);
+        model.addAttribute("user", user);
+        return "shelter/reports";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model, Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Shelter shelter = shelterRepository.findByAdminUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("No shelter found for this user"));
+
+        model.addAttribute("shelter", shelter);
+        model.addAttribute("user", user);
+        return "shelter/profile";
     }
 
     @PostMapping("/pets")

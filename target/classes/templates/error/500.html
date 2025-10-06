@@ -95,7 +95,7 @@
                         <p class="mb-1"><strong>Error:</strong> <span th:text="${error}">Internal Server Error</span></p>
                         <p class="mb-1"><strong>Message:</strong> <span th:text="${message}">An unexpected error occurred</span></p>
                         <p class="mb-1"><strong>Path:</strong> <code th:text="${path}">/some-path</code></p>
-                        <p class="mb-0"><strong>Time:</strong> <span th:text="${#temporals.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">2024-03-15 10:30:00</span></p>
+                        <p class="mb-0"><strong>Time:</strong> <span th:text="${#dates.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">2024-03-15 10:30:00</span></p>
                     </div>
 
                     <!-- Debug information (only shown in development) -->

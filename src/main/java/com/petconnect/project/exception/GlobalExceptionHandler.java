@@ -1,7 +1,9 @@
 package com.petconnect.project.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,7 +17,10 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final Environment environment;
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -102,7 +107,10 @@ public class GlobalExceptionHandler {
         
         ModelAndView mav = new ModelAndView("error/500");
         mav.addObject("error", "Internal Server Error");
-        mav.addObject("message", "An unexpected error occurred. Please try again later.");
+        String safeMessage = ex.getMessage() != null && !ex.getMessage().isBlank()
+                ? ex.getMessage()
+                : "An unexpected error occurred. Please try again later.";
+        mav.addObject("message", safeMessage);
         mav.addObject("timestamp", LocalDateTime.now());
         mav.addObject("path", request.getRequestURI());
         
@@ -116,9 +124,15 @@ public class GlobalExceptionHandler {
     }
 
     private boolean isDevelopmentMode() {
-        // Check if we're in development mode
-        String activeProfile = System.getProperty("spring.profiles.active", "");
-        return activeProfile.contains("dev") || activeProfile.contains("local");
+        String[] profiles = environment != null ? environment.getActiveProfiles() : new String[0];
+        if (profiles.length == 0) {
+            String sysProp = System.getProperty("spring.profiles.active", "");
+            return sysProp.contains("dev") || sysProp.contains("local");
+        }
+        for (String p : profiles) {
+            if (p.contains("dev") || p.contains("local")) return true;
+        }
+        return false;
     }
 
     private String getStackTraceAsString(Exception ex) {
