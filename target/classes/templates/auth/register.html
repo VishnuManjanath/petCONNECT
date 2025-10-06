@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,106 +8,282 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #fef5ff 0%, #f0e7ff 50%, #e9f0ff 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             padding: 2rem 0;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        body::before {
+            content: '🐾';
+            position: absolute;
+            top: 10%;
+            left: 15%;
+            font-size: 3rem;
+            opacity: 0.15;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '🐾';
+            position: absolute;
+            bottom: 15%;
+            right: 10%;
+            font-size: 4rem;
+            opacity: 0.15;
+            animation: float 8s ease-in-out infinite 1s;
+        }
+
+        .floating-paw {
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0.1;
+            animation: float 7s ease-in-out infinite;
+        }
+
+        .paw-1 {
+            top: 20%;
+            right: 25%;
+            animation-delay: 0.5s;
+        }
+
+        .paw-2 {
+            top: 60%;
+            left: 8%;
+            animation-delay: 1.5s;
+        }
+
+        .paw-3 {
+            top: 40%;
+            right: 12%;
+            animation-delay: 2s;
+        }
+
         .register-container {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-radius: 35px;
+            box-shadow: 0 25px 60px rgba(155, 135, 245, 0.2);
             overflow: hidden;
             max-width: 1000px;
             width: 100%;
+            position: relative;
         }
+
         .register-form {
             padding: 3rem;
         }
+
         .register-image {
-            background: linear-gradient(rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8)), 
-                        url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, #9b87f5 0%, #7c66dc 100%);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             padding: 3rem;
+            position: relative;
+            overflow: hidden;
         }
-        .form-control {
-            border-radius: 10px;
-            border: 2px solid #e9ecef;
-            padding: 12px 15px;
+
+        .register-image::before {
+            content: '🐾';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            font-size: 8rem;
+            opacity: 0.1;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .register-image::after {
+            content: '🐾';
+            position: absolute;
+            bottom: 10%;
+            left: 15%;
+            font-size: 6rem;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite 1s;
+        }
+
+        .form-control,
+        select.form-control,
+        textarea.form-control {
+            border-radius: 50px;
+            border: 2px solid #e9e3f5;
+            padding: 14px 20px;
             transition: all 0.3s ease;
+            background: #faf8ff;
         }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+
+        textarea.form-control {
+            border-radius: 25px;
         }
+
+        .form-control:focus,
+        select.form-control:focus,
+        textarea.form-control:focus {
+            border-color: #9b87f5;
+            box-shadow: 0 0 0 0.2rem rgba(155, 135, 245, 0.15);
+            background: white;
+        }
+
         .form-control.is-invalid {
             border-color: #dc3545;
         }
+
         .btn-register {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #9b87f5 0%, #7c66dc 100%);
             border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
+            border-radius: 50px;
+            padding: 16px 40px;
             font-weight: bold;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(155, 135, 245, 0.3);
         }
+
         .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(155, 135, 245, 0.4);
+            animation: pulse 0.5s ease-in-out;
         }
+
         .brand-logo {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
-            color: #667eea;
+            background: linear-gradient(135deg, #9b87f5 0%, #7c66dc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 1rem;
         }
+
+        .brand-logo i {
+            color: #fbbf24;
+            -webkit-text-fill-color: #fbbf24;
+        }
+
         .alert {
-            border-radius: 10px;
+            border-radius: 25px;
             border: none;
+            background: #fee2e2;
+            color: #dc3545;
         }
+
         .input-group-text {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
+            background: #f3f0ff;
+            border: 2px solid #e9e3f5;
             border-right: none;
-            border-radius: 10px 0 0 10px;
+            border-radius: 50px 0 0 50px;
+            color: #7c66dc;
         }
+
         .input-group .form-control {
             border-left: none;
-            border-radius: 0 10px 10px 0;
+            border-radius: 0 50px 50px 0;
         }
+
         .register-links {
             text-align: center;
             margin-top: 2rem;
         }
+
         .register-links a {
-            color: #667eea;
+            color: #9b87f5;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
+
         .register-links a:hover {
+            color: #7c66dc;
             text-decoration: underline;
         }
+
         .form-row {
             display: flex;
             gap: 1rem;
         }
+
         .form-row .form-group {
             flex: 1;
         }
+
         .invalid-feedback {
             display: block;
+            padding-left: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+            padding-left: 8px;
+        }
+
+        h3 {
+            color: #1f2937;
+            font-weight: 700;
+        }
+
+        .text-muted {
+            color: #6b7280 !important;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        select.form-control option {
+            padding: 10px;
+        }
+
+        .highlight-accent {
+            color: #fbbf24;
         }
     </style>
 </head>
+
 <body>
+    <span class="floating-paw paw-1">🐾</span>
+    <span class="floating-paw paw-2">🐾</span>
+    <span class="floating-paw paw-3">🐾</span>
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
@@ -137,8 +314,8 @@
                                             <span class="input-group-text">
                                                 <i class="fas fa-user"></i>
                                             </span>
-                                            <input type="text" class="form-control" id="username" th:field="*{username}" 
-                                                   placeholder="Choose a username" required>
+                                            <input type="text" class="form-control" id="username" th:field="*{username}"
+                                                placeholder="Choose a username" required>
                                         </div>
                                         <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback d-block">
                                             <span th:errors="*{username}"></span>
@@ -152,8 +329,8 @@
                                             <span class="input-group-text">
                                                 <i class="fas fa-envelope"></i>
                                             </span>
-                                            <input type="email" class="form-control" id="email" th:field="*{email}" 
-                                                   placeholder="Enter your email" required>
+                                            <input type="email" class="form-control" id="email" th:field="*{email}"
+                                                placeholder="Enter your email" required>
                                         </div>
                                         <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback d-block">
                                             <span th:errors="*{email}"></span>
@@ -164,17 +341,19 @@
                                     <div class="form-row">
                                         <div class="form-group mb-3">
                                             <label for="firstName" class="form-label">First Name *</label>
-                                            <input type="text" class="form-control" id="firstName" th:field="*{firstName}" 
-                                                   placeholder="First name" required>
-                                            <div th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback d-block">
+                                            <input type="text" class="form-control" id="firstName"
+                                                th:field="*{firstName}" placeholder="First name" required>
+                                            <div th:if="${#fields.hasErrors('firstName')}"
+                                                class="invalid-feedback d-block">
                                                 <span th:errors="*{firstName}"></span>
                                             </div>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label for="lastName" class="form-label">Last Name *</label>
-                                            <input type="text" class="form-control" id="lastName" th:field="*{lastName}" 
-                                                   placeholder="Last name" required>
-                                            <div th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback d-block">
+                                            <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
+                                                placeholder="Last name" required>
+                                            <div th:if="${#fields.hasErrors('lastName')}"
+                                                class="invalid-feedback d-block">
                                                 <span th:errors="*{lastName}"></span>
                                             </div>
                                         </div>
@@ -187,8 +366,8 @@
                                             <span class="input-group-text">
                                                 <i class="fas fa-phone"></i>
                                             </span>
-                                            <input type="tel" class="form-control" id="phone" th:field="*{phone}" 
-                                                   placeholder="Enter your phone number">
+                                            <input type="tel" class="form-control" id="phone" th:field="*{phone}"
+                                                placeholder="Enter your phone number">
                                         </div>
                                         <div th:if="${#fields.hasErrors('phone')}" class="invalid-feedback d-block">
                                             <span th:errors="*{phone}"></span>
@@ -198,8 +377,8 @@
                                     <!-- Address -->
                                     <div class="mb-3">
                                         <label for="address" class="form-label">Address</label>
-                                        <textarea class="form-control" id="address" th:field="*{address}" 
-                                                  placeholder="Enter your address" rows="2"></textarea>
+                                        <textarea class="form-control" id="address" th:field="*{address}"
+                                            placeholder="Enter your address" rows="2"></textarea>
                                         <div th:if="${#fields.hasErrors('address')}" class="invalid-feedback d-block">
                                             <span th:errors="*{address}"></span>
                                         </div>
@@ -209,25 +388,26 @@
                                     <div class="form-row">
                                         <div class="form-group mb-3">
                                             <label for="city" class="form-label">City</label>
-                                            <input type="text" class="form-control" id="city" th:field="*{city}" 
-                                                   placeholder="City">
+                                            <input type="text" class="form-control" id="city" th:field="*{city}"
+                                                placeholder="City">
                                             <div th:if="${#fields.hasErrors('city')}" class="invalid-feedback d-block">
                                                 <span th:errors="*{city}"></span>
                                             </div>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label for="state" class="form-label">State</label>
-                                            <input type="text" class="form-control" id="state" th:field="*{state}" 
-                                                   placeholder="State">
+                                            <input type="text" class="form-control" id="state" th:field="*{state}"
+                                                placeholder="State">
                                             <div th:if="${#fields.hasErrors('state')}" class="invalid-feedback d-block">
                                                 <span th:errors="*{state}"></span>
                                             </div>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label for="zipCode" class="form-label">ZIP Code</label>
-                                            <input type="text" class="form-control" id="zipCode" th:field="*{zipCode}" 
-                                                   placeholder="ZIP">
-                                            <div th:if="${#fields.hasErrors('zipCode')}" class="invalid-feedback d-block">
+                                            <input type="text" class="form-control" id="zipCode" th:field="*{zipCode}"
+                                                placeholder="ZIP">
+                                            <div th:if="${#fields.hasErrors('zipCode')}"
+                                                class="invalid-feedback d-block">
                                                 <span th:errors="*{zipCode}"></span>
                                             </div>
                                         </div>
@@ -238,9 +418,8 @@
                                         <label for="role" class="form-label">Account Type *</label>
                                         <select class="form-control" id="role" th:field="*{role}" required>
                                             <option value="">Select your account type</option>
-                                            <option th:each="role : ${userRoles}" 
-                                                    th:value="${role}" 
-                                                    th:text="${role.displayName}">
+                                            <option th:each="role : ${userRoles}" th:value="${role}"
+                                                th:text="${role.displayName}">
                                             </option>
                                         </select>
                                         <div th:if="${#fields.hasErrors('role')}" class="invalid-feedback d-block">
@@ -255,8 +434,8 @@
                                             <span class="input-group-text">
                                                 <i class="fas fa-lock"></i>
                                             </span>
-                                            <input type="password" class="form-control" id="password" th:field="*{password}" 
-                                                   placeholder="Create a strong password" required>
+                                            <input type="password" class="form-control" id="password"
+                                                th:field="*{password}" placeholder="Create a strong password" required>
                                         </div>
                                         <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback d-block">
                                             <span th:errors="*{password}"></span>
@@ -270,8 +449,8 @@
                                             <span class="input-group-text">
                                                 <i class="fas fa-lock"></i>
                                             </span>
-                                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
-                                                   placeholder="Confirm your password" required>
+                                            <input type="password" class="form-control" id="confirmPassword"
+                                                name="confirmPassword" placeholder="Confirm your password" required>
                                         </div>
                                     </div>
 
@@ -297,20 +476,26 @@
                                 <div>
                                     <h2 class="mb-4">Welcome to petCONNECT</h2>
                                     <p class="lead mb-4">
-                                        Join thousands of pet lovers who have found their perfect companions 
+                                        Join thousands of pet lovers who have found their perfect companions
                                         through our advanced matching system.
                                     </p>
                                     <div class="row text-center">
                                         <div class="col-4">
-                                            <i class="fas fa-heart fa-2x mb-2"></i>
+                                            <div class="feature-icon">
+                                                <i class="fas fa-heart fa-2x highlight-accent"></i>
+                                            </div>
                                             <div>Smart Matching</div>
                                         </div>
                                         <div class="col-4">
-                                            <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                                            <div class="feature-icon">
+                                                <i class="fas fa-shield-alt fa-2x highlight-accent"></i>
+                                            </div>
                                             <div>Safe & Secure</div>
                                         </div>
                                         <div class="col-4">
-                                            <i class="fas fa-users fa-2x mb-2"></i>
+                                            <div class="feature-icon">
+                                                <i class="fas fa-users fa-2x highlight-accent"></i>
+                                            </div>
                                             <div>Community</div>
                                         </div>
                                     </div>
@@ -325,5 +510,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 
+</html>

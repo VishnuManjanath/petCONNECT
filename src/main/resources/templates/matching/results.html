@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,117 +8,246 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        body {
+            background: linear-gradient(135deg, #fef7ff 0%, #f5f3ff 100%);
+            min-height: 100vh;
+        }
+
         .results-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #9b87f5 0%, #7c66dc 100%);
             color: white;
             padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
         }
+
+        .results-header::before,
+        .results-header::after {
+            content: '🐾';
+            position: absolute;
+            font-size: 4rem;
+            opacity: 0.15;
+        }
+
+        .results-header::before {
+            top: 20px;
+            left: 10%;
+            transform: rotate(-25deg);
+        }
+
+        .results-header::after {
+            bottom: 20px;
+            right: 15%;
+            transform: rotate(15deg);
+        }
+
         .match-card {
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(155, 135, 245, 0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             margin-bottom: 2rem;
             overflow: hidden;
+            background: white;
         }
+
         .match-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 30px rgba(155, 135, 245, 0.3);
         }
+
         .pet-image {
-            height: 250px;
+            height: 280px;
             object-fit: cover;
             width: 100%;
         }
+
         .compatibility-score {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255,255,255,0.95);
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 50px;
-            padding: 8px 15px;
-            font-weight: bold;
-            font-size: 1.1rem;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
-        .score-excellent { color: #28a745; }
-        .score-great { color: #17a2b8; }
-        .score-good { color: #007bff; }
-        .score-fair { color: #ffc107; }
-        .score-poor { color: #dc3545; }
-        
+
+        .score-excellent {
+            color: #10b981;
+        }
+
+        .score-great {
+            color: #3b82f6;
+        }
+
+        .score-good {
+            color: #9b87f5;
+        }
+
+        .score-fair {
+            color: #fbbf24;
+        }
+
+        .score-poor {
+            color: #ef4444;
+        }
+
         .match-quality-badge {
             font-size: 0.9rem;
-            padding: 6px 12px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
         }
+
         .pet-details {
-            padding: 1.5rem;
+            padding: 2rem;
         }
+
         .pet-name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2d2d2d;
             margin-bottom: 0.5rem;
         }
+
         .pet-info {
-            color: #666;
+            color: #6b7280;
             margin-bottom: 1rem;
+            font-size: 0.95rem;
         }
+
         .match-explanation {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 1rem;
+            background: linear-gradient(135deg, #f3e8ff 0%, #fef3c7 100%);
+            border-radius: 20px;
+            padding: 1.25rem;
             margin: 1rem 0;
-            border-left: 4px solid #667eea;
+            border: none;
         }
+
+        .match-explanation h6 {
+            color: #7c66dc;
+            font-weight: 600;
+        }
+
         .stats-card {
             background: white;
-            border-radius: 15px;
+            border-radius: 25px;
             padding: 2rem;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(155, 135, 245, 0.15);
             margin-bottom: 2rem;
+            transition: transform 0.3s ease;
         }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+        }
+
         .stats-number {
             font-size: 2.5rem;
-            font-weight: bold;
-            color: #667eea;
+            font-weight: 700;
+            color: #9b87f5;
         }
+
         .no-matches {
             text-align: center;
-            padding: 3rem;
+            padding: 4rem;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .btn-apply {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            border: none;
             border-radius: 25px;
-            padding: 10px 25px;
+            box-shadow: 0 8px 20px rgba(155, 135, 245, 0.15);
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 28px;
             color: white;
             text-decoration: none;
             transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
         }
+
         .btn-apply:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+            box-shadow: 0 6px 25px rgba(251, 191, 36, 0.6);
             color: white;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
-        .filter-section {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        .btn-outline-primary {
+            border: 2px solid #9b87f5;
+            color: #9b87f5;
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: #9b87f5;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid #9ca3af;
+            color: #6b7280;
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6b7280;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #9b87f5 0%, #7c66dc 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 28px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(155, 135, 245, 0.4);
+        }
+
+        .card {
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(155, 135, 245, 0.15);
+        }
+
+        .card-title {
+            color: #7c66dc;
+            font-weight: 600;
+        }
+
+        .badge {
+            border-radius: 50px;
+            padding: 6px 12px;
+            font-weight: 600;
         }
     </style>
 </head>
+
 <body>
     <div class="results-header text-center">
         <div class="container">
             <h1><i class="fas fa-heart"></i> Your Perfect Pet Matches</h1>
-            <p class="lead" th:text="'Hello ' + ${user.firstName} + '! Based on your lifestyle profile, here are your personalized pet matches.'"></p>
+            <p class="lead"
+                th:text="'Hello ' + ${user.firstName} + '! Based on your lifestyle profile, here are your personalized pet matches.'">
+            </p>
         </div>
     </div>
 
@@ -165,39 +295,38 @@
                 <div class="col-lg-8 mx-auto" th:each="match : ${matches}">
                     <div class="card match-card">
                         <div class="position-relative">
-                            <img th:src="${match.pet.imageUrl != null ? match.pet.imageUrl : '/images/default-pet.jpg'}" 
-                                 th:alt="${match.pet.name}" class="pet-image">
-                            <div class="compatibility-score" 
-                                 th:classappend="${match.compatibilityScore >= 85 ? 'score-excellent' : 
+                            <img th:src="${match.pet.imageUrl != null ? match.pet.imageUrl : '/images/default-pet.jpg'}"
+                                th:alt="${match.pet.name}" class="pet-image">
+                            <div class="compatibility-score" th:classappend="${match.compatibilityScore >= 85 ? 'score-excellent' : 
                                                  match.compatibilityScore >= 70 ? 'score-great' : 
                                                  match.compatibilityScore >= 55 ? 'score-good' : 
                                                  match.compatibilityScore >= 40 ? 'score-fair' : 'score-poor'}"
-                                 th:text="${match.compatibilityPercentage}">
+                                th:text="${match.compatibilityPercentage}">
                                 95%
                             </div>
                         </div>
                         <div class="pet-details">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div class="pet-name" th:text="${match.pet.name}">Buddy</div>
-                                <span class="badge match-quality-badge" 
-                                      th:classappend="${match.matchQualityBadgeClass}"
-                                      th:text="${match.matchQuality}">
+                                <span class="badge match-quality-badge" th:classappend="${match.matchQualityBadgeClass}"
+                                    th:text="${match.matchQuality}">
                                     Excellent Match
                                 </span>
                             </div>
-                            
+
                             <div class="pet-info">
                                 <i class="fas fa-paw me-2"></i>
-                                <span th:text="${match.pet.species + ' • ' + (match.pet.breed ?: 'Mixed Breed') + ' • ' + match.pet.ageDisplay}">
+                                <span
+                                    th:text="${match.pet.species + ' • ' + (match.pet.breed ?: 'Mixed Breed') + ' • ' + match.pet.ageDisplay}">
                                     Dog • Golden Retriever • 3 years old
                                 </span>
                             </div>
-                            
+
                             <div class="pet-info">
                                 <i class="fas fa-ruler-combined me-2"></i>
                                 <span th:text="${match.pet.sizeDisplay + ' • ' + match.pet.gender}">Large • Male</span>
-                                <span th:if="${match.pet.adoptionFee != null and match.pet.adoptionFee > 0}" 
-                                      th:text="' • $' + ${match.pet.adoptionFee}"> • $250</span>
+                                <span th:if="${match.pet.adoptionFee != null and match.pet.adoptionFee > 0}"
+                                    th:text="' • $' + ${match.pet.adoptionFee}"> • $250</span>
                             </div>
 
                             <div class="match-explanation">
@@ -255,8 +384,8 @@
             <i class="fas fa-search fa-3x text-muted mb-3"></i>
             <h3>No Matches Found</h3>
             <p class="text-muted mb-4">
-                We couldn't find any pets that match your current preferences. 
-                This might be because there are no available pets with personality profiles, 
+                We couldn't find any pets that match your current preferences.
+                This might be because there are no available pets with personality profiles,
                 or your criteria might be very specific.
             </p>
             <div>
@@ -276,13 +405,19 @@
             <div class="col-lg-8 mx-auto">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-lightbulb me-2"></i>Tips for Your Pet Adoption Journey</h5>
+                        <h5 class="card-title"><i class="fas fa-lightbulb me-2"></i>Tips for Your Pet Adoption Journey
+                        </h5>
                         <ul class="list-unstyled">
-                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Visit the shelter to meet your potential pet in person</li>
-                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Ask about the pet's history, health, and behavior</li>
-                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Consider a trial period or foster-to-adopt program</li>
-                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Prepare your home with necessary supplies before adoption</li>
-                            <li><i class="fas fa-check text-success me-2"></i>Be patient - the right match is worth waiting for!</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Visit the shelter to meet
+                                your potential pet in person</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Ask about the pet's history,
+                                health, and behavior</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Consider a trial period or
+                                foster-to-adopt program</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Prepare your home with
+                                necessary supplies before adoption</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Be patient - the right match is worth
+                                waiting for!</li>
                         </ul>
                     </div>
                 </div>
@@ -292,8 +427,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
-
-
-
-
