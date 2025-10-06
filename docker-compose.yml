@@ -7,9 +7,9 @@ services:
     container_name: petconnect-mysql
     environment:
       MYSQL_DATABASE: petconnect
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: petconnect_user
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: Vishnu123qwe
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Vishnu123qwe
     ports:
       - "3306:3306"
     volumes:

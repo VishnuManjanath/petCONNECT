@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Browse Pets - petCONNECT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Browse All Available Pets</h1>
+    
+    <div th:if="${pets.isEmpty()}" class="alert alert-info">
+        No pets available at the moment. Check back soon!
+    </div>
+    
+    <div class="row" th:if="${!pets.isEmpty()}">
+        <div class="col-md-4" th:each="pet : ${pets}">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${pet.name}">Pet Name</h5>
+                    <p class="card-text">
+                        <strong>Species:</strong> <span th:text="${pet.species}">Species</span><br>
+                        <strong>Breed:</strong> <span th:text="${pet.breed}">Breed</span><br>
+                        <strong>Age:</strong> <span th:text="${pet.age}">Age</span> years<br>
+                        <strong>Size:</strong> <span th:text="${pet.size}">Size</span>
+                    </p>
+                    <a th:href="@{/pets/{id}(id=${pet.id})}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <a href="/matching/results" class="btn btn-secondary mt-3">Back to Matches</a>
+</div>
+</body>
+</html>

@@ -30,6 +30,7 @@ com\petconnect\project\repository\PetRepository.class
 com\petconnect\project\service\MatchmakingService$1.class
 com\petconnect\project\service\MatchmakingService.class
 com\petconnect\project\entity\LifestyleProfile.class
+com\petconnect\project\controller\PetController.class
 com\petconnect\project\entity\Shelter.class
 com\petconnect\project\PetConnectApplication.class
 com\petconnect\project\entity\AdoptionApplication$1.class

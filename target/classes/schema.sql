@@ -11,71 +11,57 @@ DROP TABLE IF EXISTS shelters;
 DROP TABLE IF EXISTS users;
 
 -- Users table
-CREATE TABLE users (
-    id VARCHAR(36) PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    phone VARCHAR(20),
-    address TEXT,
-    city VARCHAR(100),
-    state VARCHAR(50),
-    zip_code VARCHAR(10),
-    role VARCHAR(20) NOT NULL DEFAULT 'ADOPTER' CHECK (role IN ('ADOPTER', 'SHELTER_ADMIN', 'ADMIN')),
-    enabled BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+CREATE TABLE IF NOT EXISTS users (
+  id VARCHAR(36) PRIMARY KEY,
+  username VARCHAR(100) NOT NULL,
+  email VARCHAR(150),
+  password VARCHAR(255),
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  role VARCHAR(50),
+  phone VARCHAR(50),
+  address VARCHAR(255),
+  city VARCHAR(100),
+  state VARCHAR(50),
+  zip_code VARCHAR(20),
+  enabled BOOLEAN
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Shelters table
-CREATE TABLE shelters (
-    id VARCHAR(36) PRIMARY KEY,
-    name VARCHAR(200) NOT NULL,
-    description TEXT,
-    address TEXT NOT NULL,
-    city VARCHAR(100) NOT NULL,
-    state VARCHAR(50) NOT NULL,
-    zip_code VARCHAR(10) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    website VARCHAR(255),
-    admin_user_id VARCHAR(36) NOT NULL,
-    license_number VARCHAR(100),
-    capacity INTEGER DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (admin_user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+CREATE TABLE IF NOT EXISTS shelters (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(200),
+  description TEXT,
+  address VARCHAR(255),
+  city VARCHAR(100),
+  state VARCHAR(50),
+  zip_code VARCHAR(20),
+  phone VARCHAR(50),
+  email VARCHAR(150),
+  admin_user_id VARCHAR(36),
+  license_number VARCHAR(50),
+  capacity INT,
+  FOREIGN KEY (admin_user_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Pets table
-CREATE TABLE pets (
-    id VARCHAR(36) PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    species VARCHAR(50) NOT NULL,
-    breed VARCHAR(100),
-    age INTEGER NOT NULL,
-    age_group VARCHAR(20) NOT NULL CHECK (age_group IN ('PUPPY', 'YOUNG', 'ADULT', 'SENIOR')),
-    size VARCHAR(20) NOT NULL CHECK (size IN ('SMALL', 'MEDIUM', 'LARGE', 'EXTRA_LARGE')),
-    weight DECIMAL(5,2),
-    gender VARCHAR(10) NOT NULL,
-    color VARCHAR(100),
-    description TEXT,
-    medical_history TEXT,
-    special_needs TEXT,
-    house_trained BOOLEAN DEFAULT FALSE,
-    good_with_kids BOOLEAN DEFAULT FALSE,
-    good_with_dogs BOOLEAN DEFAULT FALSE,
-    good_with_cats BOOLEAN DEFAULT FALSE,
-    adoption_fee DECIMAL(8,2) DEFAULT 0.00,
-    available BOOLEAN DEFAULT TRUE,
-    shelter_id VARCHAR(36) NOT NULL,
-    image_url VARCHAR(500),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (shelter_id) REFERENCES shelters(id) ON DELETE CASCADE
-);
+CREATE TABLE IF NOT EXISTS pets (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(200),
+  species VARCHAR(100),
+  breed VARCHAR(150),
+  age INT,
+  age_group VARCHAR(50),
+  size VARCHAR(50),
+  weight DECIMAL(6,2),
+  gender VARCHAR(20),
+  color VARCHAR(50),
+  description TEXT,
+  adoption_fee DECIMAL(10,2),
+  shelter_id VARCHAR(36),
+  is_available BOOLEAN,
+  FOREIGN KEY (shelter_id) REFERENCES shelters(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Lifestyle Profiles table (for users)
 CREATE TABLE lifestyle_profiles (
@@ -167,7 +153,7 @@ CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_username ON users(username);
 CREATE INDEX idx_users_role ON users(role);
 CREATE INDEX idx_pets_shelter_id ON pets(shelter_id);
-CREATE INDEX idx_pets_available ON pets(available);
+CREATE INDEX idx_pets_available ON pets(is_available);
 CREATE INDEX idx_pets_species ON pets(species);
 CREATE INDEX idx_pets_size ON pets(size);
 CREATE INDEX idx_pets_age_group ON pets(age_group);
